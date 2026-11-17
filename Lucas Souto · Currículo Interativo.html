@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-side="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lucas Souto · Currículo Interativo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&display=swap">
+<style>
+:root{--bg:#05060f;--panel:#0d1226d9;--text:#e8ecff;--muted:#9aa4c7;--accent:#4fc3ff;--accent2:#7dffb0;--line:#26305a;--crawl:#ffd84a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-side="dark"]{--accent:#ff4d5e;--accent2:#ffb04d;--line:#4a2330}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55;min-height:100vh}
+h1,h2,h3,.display{font-family:Orbitron,system-ui,sans-serif;letter-spacing:.04em}
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:20px 16px 60px}
+.hidden{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:10px 18px;border-radius:8px;font-family:Orbitron,system-ui,sans-serif;font-size:.8rem;letter-spacing:.08em}
+.btn:hover{background:var(--accent);color:var(--bg)}
+#intro{text-align:center;padding-top:6vh}
+.crawl-wrap{height:56vh;overflow:hidden;perspective:320px}
+.crawl{color:var(--crawl);font-weight:700;font-size:clamp(1rem,3.4vw,1.5rem);transform-origin:50% 100%;animation:crawl 38s linear forwards;text-align:justify}
+.crawl h2{text-align:center;font-size:1.6em;margin:0 0 .6em}
+@keyframes crawl{from{transform:translateY(100%) rotateX(24deg)}to{transform:translateY(-230%) rotateX(24deg)}}
+.actions{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+header.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+header.top h1{margin:0;font-size:clamp(1.2rem,4vw,1.8rem)}
+header.top p{margin:2px 0 0;color:var(--muted)}
+.hud{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.hud-row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.9rem}
+.bar{height:12px;background:#1a2040;border-radius:99px;overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.planet{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:left;transition:transform .2s,border-color .2s}
+.planet:hover,.planet.active{transform:translateY(-3px);border-color:var(--accent)}
+.planet .ico{font-size:2rem;display:block}
+.planet strong{display:block;margin-top:6px;font-family:Orbitron,system-ui,sans-serif;font-size:.85rem}
+.planet small{color:var(--muted)}
+.planet.done small::after{content:" · concluída ✓";color:var(--accent2)}
+#panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:18px;min-height:120px}
+#panel h2{margin-top:0;color:var(--accent)}
+#panel h3{margin:18px 0 4px;font-size:1rem}
+#panel ul{padding-left:20px;margin:6px 0}
+.muted{color:var(--muted)}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:2px 10px;font-size:.78rem;margin:2px 4px 2px 0;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}
+.chip{background:transparent;border:1px solid var(--line);border-radius:8px;padding:8px 14px;transition:all .3s}
+.chip.on{border-color:var(--accent);color:var(--bg);background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.contact{margin-top:18px;padding:16px;border:1px dashed var(--line);border-radius:12px}
+.contact.open{border:1px solid var(--accent2)}
+.contact a{color:var(--accent2)}
+a{color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--accent);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700;z-index:5;opacity:0;pointer-events:none;transition:opacity .3s;text-align:center}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<main>
+<section id="intro">
+<div class="crawl-wrap">
+<div class="crawl">
+<h2>EPISÓDIO I<br>O DEV JÚNIOR</h2>
+<p>Há algum tempo, em um monorepo muito, muito distante…</p>
+<p>Lucas Souto Magalhães deixou os corredores da Administração Pública Federal para treinar nas artes do código. Entre processos, planilhas e diárias, descobriu que sua verdadeira missão estava no código, do front-end ao back-end.</p>
+<p>Agora, com Next.js, React e Node.js em mãos, ele luta por interfaces rápidas e bonitas nos sistemas NorthSign e cb55pay, rumo ao título de Desenvolvedor Full Stack.</p>
+<p>Sua jornada espera por você. Que o código esteja com você…</p>
+</div>
+</div>
+<div class="actions">
+<button class="btn" id="start">Iniciar missão</button>
+<button class="btn" id="skip">Pular abertura</button>
+</div>
+</section>
+
+<section id="hub" class="hidden">
+<header class="top">
+<div>
+<h1>Lucas Souto Magalhães</h1>
+<p>Desenvolvedor Full Stack Júnior · Distrito Federal, Brasil</p>
+</div>
+<button class="btn" id="side">Lado da Força: Luz</button>
+</header>
+<div class="hud">
+<div class="hud-row"><span>Patente: <b id="rank">Padawan</b></span><span><b id="xp">0</b> / 100 XP</span></div>
+<div class="bar"><i id="fill"></i></div>
+</div>
+<div class="grid" id="grid"></div>
+<div id="panel"><p class="muted">Escolha um planeta para começar sua missão. Cada um concluído rende XP.</p></div>
+<div class="contact" id="contact"></div>
+</section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const missions=[
+{id:"formacao",ico:"🪐",name:"Planeta Formação",sub:"Estudos e certificados",html:`
+<h2>Planeta Formação</h2>
+<h3>Faculdade IBRA · conclusão 06/2026</h3>
+<p>Tecnólogo em Análise e Desenvolvimento de Sistemas.</p>
+<h3>Certificações</h3>
+<ul>
+<li>Python · Santander Open Academy</li>
+<li>Maximizar a IA no seu negócio · Santander Open Academy</li>
+<li>HTML5, CSS3 e JavaScript · Curso em Vídeo</li>
+<li>JavaScript do Básico ao Avançado · Udemy</li>
+<li>Banco de Dados SQL do Zero ao Avançado · Udemy</li>
+</ul>
+<h3>Idiomas</h3>
+<p>Português (nativo) · Inglês (avançado)</p>`},
+{id:"experiencia",ico:"🚀",name:"Nave Experiência",sub:"Trajetória profissional",html:`
+<h2>Nave Experiência</h2>
+<h3>Desenvolvedor Full Stack · Vexa Payments</h3>
+<p class="muted">2026 – Atual · Canadá (remoto)</p>
+<ul>
+<li>Front-end de aplicações web com Next.js e React.</li>
+<li>Integração com APIs REST e serviços de terceiros.</li>
+<li>Arquitetura de software em uma base de código de produção.</li>
+<li>Atuação no back-end: banco de dados SQL e conexão de APIs.</li>
+<li>Controle de versão com Git e GitHub.</li>
+<li>Atuação com metodologia ágil (Scrum) e Jira.</li>
+<li>Utilização de ferramentas de IA (Claude, Cursor e ChatGPT) para apoio ao desenvolvimento de software e resolução de problemas.</li>
+<li>Capacidade de avaliar, testar e validar soluções geradas com auxílio de IA.</li>
+</ul>
+<h3>Assistente Administrativo · Comando da Aeronáutica (GTE)</h3>
+<p class="muted">08/2023 – 02/2026</p>
+<ul>
+<li>Gestão de documentos e processamento de processos na Administração Pública Federal.</li>
+<li>Operação do SCDP (Sistema de Concessão de Diárias e Passagens).</li>
+<li>Suporte técnico-administrativo, planilhas e relatórios.</li>
+</ul>`},
+{id:"projetos",ico:"🛰️",name:"Estação Projetos",sub:"O que já construí",html:`
+<h2>Estação Projetos</h2>
+<h3>NorthSign</h3>
+<p>Plataforma de assinatura de documentos. Atuei no front-end do site.</p>
+<span class="tag">Next.js</span><span class="tag">React</span><span class="tag">TypeScript</span>
+<h3>cb55pay</h3>
+<p>Atuei no front-end do site.</p>
+<span class="tag">Next.js</span><span class="tag">React</span>
+<h3>Sistema de Controle de Diárias e Passagens</h3>
+<p>Solicitações de viagem, cadastro de usuários e acompanhamento de status, inspirado no SCDP.</p>
+<span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Node.js</span><span class="tag">MySQL</span>
+<h3>Sistema de Cadastro de Usuários (CRUD)</h3>
+<p>Criação, consulta, atualização e exclusão de usuários.</p>
+<span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Node.js</span><span class="tag">MySQL</span>`},
+{id:"habilidades",ico:"⚔️",name:"Arsenal Habilidades",sub:"Acenda seus sabres",html:`
+<h2>Arsenal Habilidades</h2>
+<p class="muted">Clique para acender cada sabre.</p>
+<h3>Front-end</h3>
+<div class="chips"><button class="chip">HTML5</button><button class="chip">CSS3</button><button class="chip">JavaScript</button><button class="chip">React</button><button class="chip">Next.js</button></div>
+<h3>Back-end e dados</h3>
+<div class="chips"><button class="chip">Node.js</button><button class="chip">SQL</button><button class="chip">MySQL</button><button class="chip">APIs REST</button></div>
+<h3>Ferramentas e método</h3>
+<div class="chips"><button class="chip">Git</button><button class="chip">GitHub</button><button class="chip">VS Code</button><button class="chip">Scrum</button><button class="chip">Jira</button><button class="chip">POO</button></div>`}
+];
+const ranks=[[0,"Padawan"],[50,"Cavaleiro"],[100,"Mestre Jedi Júnior"]];
+const done=new Set();
+const $=id=>document.getElementById(id);
+const grid=$("grid");
+grid.innerHTML=missions.map(m=>`<button class="planet" data-id="${m.id}"><span class="ico">${m.ico}</span><strong>${m.name}</strong><small>${m.sub}</small></button>`).join("");
+
+function toast(t){
+const el=$("toast");
+el.textContent=t;
+el.classList.add("show");
+setTimeout(()=>el.classList.remove("show"),2200);
+}
+
+function render(){
+const xp=done.size*25;
+$("xp").textContent=xp;
+$("fill").style.width=xp+"%";
+$("rank").textContent=ranks.filter(r=>xp>=r[0]).pop()[1];
+grid.querySelectorAll(".planet").forEach(p=>p.classList.toggle("done",done.has(p.dataset.id)));
+const c=$("contact");
+if(xp>=100){
+c.classList.add("open");
+c.innerHTML=`<h3 class="display">Canal de comunicação aberto</h3><p>Missão cumprida! Vamos conversar:</p><p><a href="mailto:lsoutom27@gmail.com">lsoutom27@gmail.com</a><br><a href="https://github.com/lucassm27" target="_blank" rel="noopener">github.com/lucassm27</a></p>`;
+}else{
+c.classList.remove("open");
+c.innerHTML=`<p class="muted">🔒 Conclua as 4 missões para desbloquear o contato.</p>`;
+}
+}
+
+function open(id){
+const m=missions.find(x=>x.id===id);
+$("panel").innerHTML=m.html;
+grid.querySelectorAll(".planet").forEach(p=>p.classList.toggle("active",p.dataset.id===id));
+if(!done.has(id)){
+done.add(id);
+toast("+25 XP · "+m.name);
+if(done.size===missions.length)setTimeout(()=>toast("Você é um Mestre Jedi Júnior!"),2400);
+}
+render();
+}
+
+grid.addEventListener("click",e=>{
+const p=e.target.closest(".planet");
+if(p)open(p.dataset.id);
+});
+
+$("panel").addEventListener("click",e=>{
+const c=e.target.closest(".chip");
+if(c)c.classList.toggle("on");
+});
+
+function enter(){
+$("intro").classList.add("hidden");
+$("hub").classList.remove("hidden");
+window.scrollTo(0,0);
+}
+$("start").onclick=enter;
+$("skip").onclick=enter;
+
+$("side").onclick=()=>{
+const root=document.documentElement;
+const dark=root.dataset.side==="light";
+root.dataset.side=dark?"dark":"light";
+$("side").textContent="Lado da Força: "+(dark?"Sombra":"Luz");
+};
+
+const cv=$("stars");
+const ctx=cv.getContext("2d");
+let stars=[];
+function resize(){
+cv.width=innerWidth;
+cv.height=innerHeight;
+stars=Array.from({length:140},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.4+.2,s:Math.random()*.4+.05}));
+}
+function draw(){
+ctx.clearRect(0,0,cv.width,cv.height);
+ctx.fillStyle="#fff";
+stars.forEach(s=>{
+s.y+=s.s;
+if(s.y>cv.height)s.y=0;
+ctx.globalAlpha=.4+s.r/2.5;
+ctx.beginPath();
+ctx.arc(s.x,s.y,s.r,0,6.283);
+ctx.fill();
+});
+requestAnimationFrame(draw);
+}
+addEventListener("resize",resize);
+resize();
+draw();
+render();
+</script>
+</body>
+</html>
